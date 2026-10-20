@@ -115,6 +115,51 @@
             display: none !important;
         }
 
+        .progreso-formulario {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .barra-progreso {
+            height: 8px;
+            overflow: hidden;
+            background-color: #dbeafe;
+            border-radius: 999px;
+        }
+
+        .barra-progreso div {
+            width: 20%;
+            height: 100%;
+            background-color: #2563eb;
+            border-radius: inherit;
+            transition: width 0.25s ease;
+        }
+
+        .pantalla-formulario {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .pantalla-formulario.activa {
+            display: flex;
+        }
+
+        .mensaje-validacion {
+            display: none;
+            color: #b91c1c;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .mensaje-validacion.visible {
+            display: block;
+        }
+
         /* Campos de entrada y desplegables */
         .cajita, .listas {
             width: 100%;
@@ -312,8 +357,15 @@
 
         <!-- VISTA 2: FORMULARIO PRINCIPAL (OCULTO INICIALMENTE) -->
         <form class="minicont oculto" id="formulario-contacto" novalidate>
+            <div class="progreso-formulario" aria-live="polite">
+                <span id="progreso-texto"></span>
+                <div class="barra-progreso" role="progressbar" aria-label="Progreso del formulario" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+                    <div id="progreso-barra"></div>
+                </div>
+            </div>
 
-            <!-- DATOS GENERALES -->
+            <section class="pantalla-formulario activa" aria-labelledby="titulo-generales">
+            <h1 id="titulo-generales">Datos Generales</h1>
             <h3>Nombre Completo</h3>
             <input class="cajita" type="text" name="nombre" id="form_nombre" placeholder="Nombre completo" required>
 
@@ -350,8 +402,14 @@
             <h3>Edad</h3>
             <input class="cajita" type="number" name="edad" placeholder="Edad en años" required>
 
+            <div class="grupo-botones">
+                <button type="button" class="btn btn-primario btn-siguiente">Continuar</button>
+            </div>
+            </section>
+
             <!-- I. ASPECTOS SOCIOECONÓMICOS -->
-            <h1>I. Aspectos Socioeconómicos</h1>
+            <section class="pantalla-formulario" aria-labelledby="titulo-socioeconomicos">
+            <h1 id="titulo-socioeconomicos">I. Aspectos Socioeconómicos</h1>
 
             <div class="encuesta-contenedor">
                 <div class="titulo-pregunta">1. ¿Resides en esta ciudad?</div>
@@ -413,9 +471,15 @@
             <h3>8. Ingreso familiar mensual (aproximado)</h3>
             <input class="cajita" type="number" name="ingreso_familiar" placeholder="Ingreso familiar mensual en pesos" required>
 
+            <div class="grupo-botones">
+                <button type="button" class="btn btn-secundario btn-anterior">Anterior</button>
+                <button type="button" class="btn btn-primario btn-siguiente">Continuar</button>
+            </div>
+            </section>
 
             <!-- II. ASPECTOS PERSONALES -->
-            <h1>II. Aspectos Personales</h1>
+            <section class="pantalla-formulario" aria-labelledby="titulo-personales">
+            <h1 id="titulo-personales">II. Aspectos Personales</h1>
 
             <div class="encuesta-contenedor">
                 <div class="titulo-pregunta">1. ¿Padeces alguna enfermedad o alergia?</div>
@@ -433,7 +497,7 @@
             <h3>2. Frecuencia de enfermedades menores (gripe, dolores, etc.)</h3>
             <input class="cajita" type="text" name="frecuencia_enfermedades_menores" placeholder="Especifica enfermedad y frecuencia" required>
 
-            <div class="encuesta-contenedor" id="grupo-observados">
+            <div class="encuesta-contenedor" id="grupo-observados" data-validar-checkbox>
                 <div class="titulo-pregunta">3. De los siguientes aspectos, marque los que observa o presenta (SELECCIONA AL MENOS UNO):</div>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Obesidad"> Obesidad</label>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Delgadez Extrema"> Delgadez Extrema</label>
@@ -445,6 +509,7 @@
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Discapacidades"> Discapacidades</label>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Otros"> Otros</label>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Ninguno"> Ninguno</label>
+                <p class="mensaje-validacion" role="alert">Selecciona al menos un aspecto.</p>
             </div>
 
             <div class="encuesta-contenedor">
@@ -525,9 +590,15 @@
             <h3>17. ¿A qué te dedicas en tu tiempo libre?</h3>
             <input class="cajita" type="text" name="tiempo_libre" placeholder="Pasatiempos o actividades" required>
 
+            <div class="grupo-botones">
+                <button type="button" class="btn btn-secundario btn-anterior">Anterior</button>
+                <button type="button" class="btn btn-primario btn-siguiente">Continuar</button>
+            </div>
+            </section>
 
             <!-- III. ASPECTOS ACADÉMICOS -->
-            <h1>III. Aspectos Académicos</h1>
+            <section class="pantalla-formulario" aria-labelledby="titulo-academicos">
+            <h1 id="titulo-academicos">III. Aspectos Académicos</h1>
 
             <h3>1. Bachillerato (Nombre de la escuela)</h3>
             <input class="cajita" type="text" name="bachillerato_nombre" placeholder="Nombre del bachillerato" required>
@@ -612,8 +683,15 @@
                 <label class="opcion-fila"><input class="circulo-radio" type="radio" name="computadora_casa" value="NO" required> No</label>
             </div>
 
+            <div class="grupo-botones">
+                <button type="button" class="btn btn-secundario btn-anterior">Anterior</button>
+                <button type="button" class="btn btn-primario btn-siguiente">Continuar</button>
+            </div>
+            </section>
+
             <!-- EVALUACIÓN Y OBSERVACIONES DEL TUTOR -->
-            <h1>EVALUACIÓN Y OBSERVACIONES DEL TUTOR</h1>
+            <section class="pantalla-formulario" aria-labelledby="titulo-evaluacion">
+            <h1 id="titulo-evaluacion">EVALUACIÓN Y OBSERVACIONES DEL TUTOR</h1>
 
             <div class="encuesta-contenedor">
                 <div class="titulo-pregunta">¿Se considera al alumno como elemento de uno o más grupos altamente vulnerables?</div>
@@ -621,12 +699,13 @@
                 <label class="opcion-fila"><input class="circulo-radio" type="radio" name="vulnerable_grupo" value="NO" required> No</label>
             </div>
 
-            <div class="encuesta-contenedor" id="grupo-vulnerabilidad">
+            <div class="encuesta-contenedor" id="grupo-vulnerabilidad" data-validar-checkbox>
                 <div class="titulo-pregunta">Marque los grupos de vulnerabilidad (SELECCIONA AL MENOS UNO):</div>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Aspectos Socioeconómicos"> Aspectos Socioeconómicos</label>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Aspectos Personales"> Aspectos Personales</label>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Aspectos Académicos"> Aspectos Académicos</label>
                 <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Ninguno"> Ninguno</label>
+                <p class="mensaje-validacion" role="alert">Selecciona al menos un grupo de vulnerabilidad.</p>
             </div>
 
             <h3>Observaciones del Tutor</h3>
@@ -641,9 +720,11 @@
 
             <!-- BOTONES -->
             <div class="grupo-botones">
+                <button type="button" class="btn btn-secundario btn-anterior">Anterior</button>
                 <button type="reset" class="btn btn-secundario">Limpiar</button>
                 <button type="submit" class="btn btn-primario">Enviar Formulario</button>
             </div>
+            </section>
         </form>
     </div>
 
@@ -674,6 +755,84 @@
         const btnIngresar = document.getElementById("btn-ingresar");
         const mensajeNotificacion = document.getElementById("mensaje-notificacion");
         const errorLogin = document.getElementById("error-login");
+        const pantallasFormulario = Array.from(formulario.querySelectorAll(".pantalla-formulario"));
+        const progresoTexto = document.getElementById("progreso-texto");
+        const progresoBarra = document.querySelector(".barra-progreso");
+        const progresoRelleno = document.getElementById("progreso-barra");
+        let pantallaActual = 0;
+        let conservarPantallaAlReiniciar = false;
+
+        function mostrarPantalla(indice) {
+            pantallaActual = indice;
+            pantallasFormulario.forEach((pantalla, posicion) => {
+                pantalla.classList.toggle("activa", posicion === indice);
+            });
+
+            progresoTexto.textContent = `Pantalla ${indice + 1} de ${pantallasFormulario.length}`;
+            progresoBarra.setAttribute("aria-valuemax", String(pantallasFormulario.length));
+            progresoBarra.setAttribute("aria-valuenow", String(indice + 1));
+            progresoRelleno.style.width = `${((indice + 1) / pantallasFormulario.length) * 100}%`;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function validarPantalla(pantalla) {
+            const campoInvalido = Array.from(pantalla.querySelectorAll("input, select, textarea"))
+                .find(campo => !campo.checkValidity());
+
+            if (campoInvalido) {
+                if (!pantalla.classList.contains("activa")) {
+                    return false;
+                }
+                campoInvalido.reportValidity();
+                campoInvalido.focus();
+                return false;
+            }
+
+            const grupoInvalido = Array.from(pantalla.querySelectorAll("[data-validar-checkbox]"))
+                .find(grupo => !grupo.querySelector('input[type="checkbox"]:checked'));
+
+            if (grupoInvalido) {
+                if (!pantalla.classList.contains("activa")) {
+                    return false;
+                }
+                const mensaje = grupoInvalido.querySelector(".mensaje-validacion");
+                mensaje.classList.add("visible");
+                grupoInvalido.querySelector('input[type="checkbox"]').focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        formulario.addEventListener("click", function (evento) {
+            if (evento.target.closest(".btn-siguiente")) {
+                if (validarPantalla(pantallasFormulario[pantallaActual])) {
+                    mostrarPantalla(pantallaActual + 1);
+                }
+            } else if (evento.target.closest(".btn-anterior")) {
+                mostrarPantalla(pantallaActual - 1);
+            }
+        });
+
+        formulario.addEventListener("change", function (evento) {
+            if (evento.target.matches('input[type="checkbox"]')) {
+                const grupo = evento.target.closest("[data-validar-checkbox]");
+                if (grupo && grupo.querySelector('input[type="checkbox"]:checked')) {
+                    grupo.querySelector(".mensaje-validacion").classList.remove("visible");
+                }
+            }
+        });
+
+        formulario.addEventListener("reset", function () {
+            formulario.querySelectorAll(".mensaje-validacion").forEach(mensaje => {
+                mensaje.classList.remove("visible");
+            });
+            if (conservarPantallaAlReiniciar) {
+                conservarPantallaAlReiniciar = false;
+                return;
+            }
+            setTimeout(() => mostrarPantalla(0), 0);
+        });
 
         // Acción al hacer clic en Acceder
         btnIngresar.addEventListener("click", function () {
@@ -691,6 +850,7 @@
 
             pantallaLogin.classList.add("oculto");
             formulario.classList.remove("oculto");
+            mostrarPantalla(0);
         });
 
         function mostrarMensaje(texto, esExito) {
@@ -705,10 +865,14 @@
             evento.preventDefault();
             mensajeNotificacion.style.display = "none";
 
-            // Validar campos requeridos estándar de HTML5
-            if (!formulario.checkValidity()) {
-                formulario.reportValidity(); // Muestra la alerta nativa del navegador
-                return;
+            // Revisar cada pantalla para enfocar correctamente los campos inválidos, aunque esté oculta.
+            for (let indice = 0; indice < pantallasFormulario.length; indice++) {
+                const pantalla = pantallasFormulario[indice];
+                if (!validarPantalla(pantalla)) {
+                    mostrarPantalla(indice);
+                    validarPantalla(pantalla);
+                    return;
+                }
             }
 
             // Validar manualmente que los checkboxes tengan al menos una opción seleccionada
@@ -741,6 +905,7 @@
                 mostrarMensaje("¡Formulario enviado y guardado correctamente!", true);
                 
                 // Limpiar formulario y reCAPTCHA
+                conservarPantallaAlReiniciar = true;
                 formulario.reset();
                 if (typeof grecaptcha !== 'undefined') {
                     grecaptcha.reset();
