@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        /* ==========================================
+           ESTILOS GENERALES Y TEMA AZUL
+           ========================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            color: #1e293b;
+        }
+
+        /* Contenedor principal estilo tarjeta */
+        .contenedor {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(14, 116, 144, 0.15), 0 8px 10px -6px rgba(14, 116, 144, 0.1);
+            border: 1px solid #bfdbfe;
+            width: 100%;
+            max-width: 720px;
+            padding: 35px 30px;
+        }
+
+        /* Encabezado con Icono/Logo */
+        .encabezado-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-utim {
+            width: 90px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .minicont {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .minicont h1 {
+            color: #1e3a8a;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .subtitulo-doc {
+            text-align: center;
+            color: #0284c7;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #dbeafe;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .minicont h3 {
+            color: #1e40af;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+        }
+
+        /* Tarjeta de Inicio de Sesión */
+        .seccion-login {
+            background-color: #f0f9ff;
+            border: 1.5px solid #93c5fd;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .titulo-login {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #bfdbfe;
+            padding-bottom: 8px;
+        }
+
+        /* Control de Visibilidad */
+        .oculto {
+            display: none !important;
+        }
+
+        /* Campos de entrada y desplegables */
+        .cajita, .listas {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #93c5fd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+            color: #1e293b;
+            background-color: #f8fafc;
+            transition: all 0.25s ease;
+        }
+
+        textarea.cajita {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .cajita:focus, .listas:focus {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Menú desplegable personalizado */
+        .listas {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 18px;
+            cursor: pointer;
+        }
+
+        .listas option {
+            color: #1e293b;
+            background-color: #ffffff;
+        }
+
+        /* Bloque de encuesta / opciones de radio */
+        .encuesta-contenedor {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #f0f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0f2fe;
+        }
+
+        .titulo-pregunta {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 4px;
+        }
+
+        .opcion-fila {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #334155;
+            transition: color 0.2s ease;
+        }
+
+        .opcion-fila:hover {
+            color: #1d4ed8;
+        }
+
+        .circulo-radio {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #2563eb;
+        }
+
+        /* Botones */
+        .grupo-botones {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+        }
+
+        .btn-primario {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primario:hover {
+            background-color: #1d4ed8;
+            box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-secundario {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-secundario:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Mapa */
+        .mapa {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+            margin-top: 10px;
+        }
+
+        .mapa iframe {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: 300px;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        /* Mensaje de respuesta personalizado */
+        .mensaje-notificacion {
+            display: none;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .mensaje-exito {
+            background-color: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .mensaje-error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        
+        <!-- ENCABEZADO CON LOGO / ICONO -->
+        <div class="encabezado-logo">
+            <img src="logo.png" alt="Logo UTIM" class="logo-utim">
+            <h1>UATV</h1>
+        </div>
+        
+
+        <!-- VISTA 1: INICIO DE SESIÓN -->
+        <div id="pantalla-login" class="seccion-login">
+            <div class="titulo-login">Inicio de Sesión</div>
+            
+            <h3>Nombre de Usuario / Alumno</h3>
+            <input class="cajita" type="text" id="login_nombre" placeholder="Ingresa tu nombre completo" required>
+
+            <h3>Matrícula</h3>
+            <input class="cajita" type="text" id="login_matricula" placeholder="Ingresa tu matrícula" required>
+
+            <div class="grupo-botones">
+                <button type="button" class="btn btn-primario" id="btn-ingresar">Acceder al Formulario</button>
+            </div>
+            <div id="error-login" style="color: red; font-size: 13px; text-align: center; display: none;">Ambos campos son obligatorios</div>
+        </div>
+
+        <!-- VISTA 2: FORMULARIO PRINCIPAL (OCULTO INICIALMENTE) -->
+        <form class="minicont oculto" id="formulario-contacto" novalidate>
+
+            <!-- DATOS GENERALES -->
+            <h3>Nombre Completo</h3>
+            <input class="cajita" type="text" name="nombre" id="form_nombre" placeholder="Nombre completo" required>
+
+            <h3>Matrícula</h3>
+            <input class="cajita" type="text" name="matricula" id="form_matricula" placeholder="Número de matrícula" required>
+
+            <h3>Dirección</h3>
+            <input class="cajita" type="text" name="direccion" placeholder="Dirección completa" required>
+
+            <h3>Teléfono</h3>
+            <input class="cajita" type="tel" name="telefono" placeholder="Teléfono fijo" required>
+
+            <h3>Celular</h3>
+            <input class="cajita" type="tel" name="celular" placeholder="Teléfono celular" required>
+
+            <h3>Programa Educativo</h3>
+            <input class="cajita" type="text" name="programa_educativo" placeholder="Carrera o programa educativo" required>
+
+            <h3>Grupo Escolar</h3>
+            <input class="cajita" type="text" name="grupo_escolar" placeholder="Grupo" required>
+
+            <h3>Estado Civil</h3>
+            <select class="listas" name="estado_civil" required>
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="Soltero(a)">Soltero(a)</option>
+                <option value="Casado(a)">Casado(a)</option>
+                <option value="Unión Libre">Unión Libre</option>
+                <option value="Otro">Otro</option>
+            </select>
+
+            <h3>Nombre del Tutor</h3>
+            <input class="cajita" type="text" name="nombre_tutor" placeholder="Nombre completo del tutor" required>
+
+            <h3>Edad</h3>
+            <input class="cajita" type="number" name="edad" placeholder="Edad en años" required>
+
+            <!-- I. ASPECTOS SOCIOECONÓMICOS -->
+            <h1>I. Aspectos Socioeconómicos</h1>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">1. ¿Resides en esta ciudad?</div>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="resides_ciudad" value="SI" required> Sí
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="resides_ciudad" value="NO" required> No
+                </label>
+            </div>
+
+            <h3>Tiempo o Especificación de residencia</h3>
+            <input class="cajita" type="text" name="residencia_detalle" placeholder="Tiempo viviendo en la ciudad o lugar donde resides" required>
+
+            <h3>2. ¿Con quién vives actualmente?</h3>
+            <input class="cajita" type="text" name="con_quien_vives" placeholder="Ej. Padres, solo, compañeros de universidad" required>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">3. ¿Trabajas?</div>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="trabajas" value="SI" required> Sí
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="trabajas" value="NO" required> No
+                </label>
+            </div>
+
+            <h3>Detalles de Trabajo (Lugar, Horas semanales, Ingreso)</h3>
+            <input class="cajita" type="text" name="trabajo_detalles" placeholder="¿En dónde? / Nº de horas semanales / Ingreso (Escribe NA si no aplicas)" required>
+
+            <h3>4. ¿De quién dependes económicamente? e Ingreso mensual</h3>
+            <input class="cajita" type="text" name="dependencia_economica" placeholder="Persona de quien dependes e ingreso mensual de la misma" required>
+
+            <h3>5. ¿A qué se dedica tu papá?</h3>
+            <input class="cajita" type="text" name="ocupacion_papa" placeholder="Ocupación del padre" required>
+
+            <h3>¿A qué se dedica tu mamá?</h3>
+            <input class="cajita" type="text" name="ocupacion_mama" placeholder="Ocupación de la madre" required>
+
+            <h3>6. Si tienes hermanos señala cuántos son y su actividad principal</h3>
+            <textarea class="cajita" name="hermanos_actividades" placeholder="Número de hermanos y actividad principal de cada uno..." required></textarea>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">7. La casa que habitas es:</div>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="tipo_casa" value="Propia" required> Propia
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="tipo_casa" value="Rentada" required> Rentada
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="tipo_casa" value="Prestada" required> Prestada
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="tipo_casa" value="Otros" required> Otros
+                </label>
+            </div>
+
+            <h3>8. Ingreso familiar mensual (aproximado)</h3>
+            <input class="cajita" type="number" name="ingreso_familiar" placeholder="Ingreso familiar mensual en pesos" required>
+
+
+            <!-- II. ASPECTOS PERSONALES -->
+            <h1>II. Aspectos Personales</h1>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">1. ¿Padeces alguna enfermedad o alergia?</div>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="enfermedad_alergia" value="SI" required> Sí
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="enfermedad_alergia" value="NO" required> No
+                </label>
+            </div>
+
+            <h3>Especifica enfermedad o alergia</h3>
+            <input class="cajita" type="text" name="especifica_enfermedad" placeholder="Escribe detalles si respondiste SÍ (o NA si es NO)" required>
+
+            <h3>2. Frecuencia de enfermedades menores (gripe, dolores, etc.)</h3>
+            <input class="cajita" type="text" name="frecuencia_enfermedades_menores" placeholder="Especifica enfermedad y frecuencia" required>
+
+            <div class="encuesta-contenedor" id="grupo-observados">
+                <div class="titulo-pregunta">3. De los siguientes aspectos, marque los que observa o presenta (SELECCIONA AL MENOS UNO):</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Obesidad"> Obesidad</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Delgadez Extrema"> Delgadez Extrema</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Manchas en la Piel"> Manchas en la Piel</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Falta de Energía"> Falta de Energía</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Problemas de Dentadura"> Problemas de Dentadura</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Problemas Visuales"> Problemas Visuales</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Problemas Auditivos"> Problemas Auditivos</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Discapacidades"> Discapacidades</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Otros"> Otros</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="aspectos_observados[]" value="Ninguno"> Ninguno</label>
+            </div>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">4. ¿Tomas algún medicamento periódicamente?</div>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="medicamento_periodico" value="SI" required> Sí
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="medicamento_periodico" value="NO" required> No
+                </label>
+            </div>
+
+            <h3>¿Cuál medicamento?</h3>
+            <input class="cajita" type="text" name="cual_medicamento" placeholder="Nombre del medicamento (o NA si no aplica)" required>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">5. ¿Fumas?</div>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="fumas" value="SI" required> Sí
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="fumas" value="NO" required> No
+                </label>
+            </div>
+
+            <h3>Cantidad y frecuencia de tabaco</h3>
+            <input class="cajita" type="text" name="fumas_frecuencia" placeholder="Especifica cantidad y frecuencia (o NA si no aplica)" required>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">6. ¿Ingieres bebidas alcohólicas?</div>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="alcohol" value="SI" required> Sí
+                </label>
+                <label class="opcion-fila">
+                    <input class="circulo-radio" type="radio" name="alcohol" value="NO" required> No
+                </label>
+            </div>
+
+            <h3>Cantidad y frecuencia de alcohol</h3>
+            <input class="cajita" type="text" name="alcohol_frecuencia" placeholder="Especifica cantidad y frecuencia (o NA si no aplica)" required>
+
+            <h3>7. ¿Cuáles consideras que son tus principales cualidades?</h3>
+            <textarea class="cajita" name="cualidades" placeholder="Describe tus cualidades..." required></textarea>
+
+            <h3>8. ¿Cuáles consideras que son tus principales defectos?</h3>
+            <textarea class="cajita" name="defectos" placeholder="Describe tus defectos..." required></textarea>
+
+            <h3>9. ¿Qué valores aprecias más en la gente?</h3>
+            <input class="cajita" type="text" name="valores_apreciados" placeholder="Valores principales" required>
+
+            <h3>10. ¿Qué es lo que más te disgusta de la gente?</h3>
+            <input class="cajita" type="text" name="disgusta_gente" placeholder="Cosas que te disgustan" required>
+
+            <h3>11. Señala tres situaciones o aspectos que te provocan temor:</h3>
+            <textarea class="cajita" name="temores" placeholder="Escribe las tres situaciones..." required></textarea>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">12. ¿Actualmente tienes novio(a)?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="tiene_novio" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="tiene_novio" value="NO" required> No</label>
+            </div>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">13. ¿Tienes planes de matrimonio en el corto plazo?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="planes_matrimonio" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="planes_matrimonio" value="NO" required> No</label>
+            </div>
+
+            <h3>14. ¿Qué planes tienes para tu futuro personal?</h3>
+            <textarea class="cajita" name="futuro_personal" placeholder="Tus planes personales..." required></textarea>
+
+            <h3>15. ¿Qué planes tienes para tu futuro académico?</h3>
+            <textarea class="cajita" name="futuro_academico" placeholder="Tus planes académicos..." required></textarea>
+
+            <h3>16. ¿Qué planes tienes para tu futuro profesional?</h3>
+            <textarea class="cajita" name="futuro_profesional" placeholder="Tus planes profesionales..." required></textarea>
+
+            <h3>17. ¿A qué te dedicas en tu tiempo libre?</h3>
+            <input class="cajita" type="text" name="tiempo_libre" placeholder="Pasatiempos o actividades" required>
+
+
+            <!-- III. ASPECTOS ACADÉMICOS -->
+            <h1>III. Aspectos Académicos</h1>
+
+            <h3>1. Bachillerato (Nombre de la escuela)</h3>
+            <input class="cajita" type="text" name="bachillerato_nombre" placeholder="Nombre del bachillerato" required>
+
+            <h3>Turno</h3>
+            <select class="listas" name="bachillerato_turno" required>
+                <option value="" disabled selected>Selecciona un turno</option>
+                <option value="Matutino">Matutino</option>
+                <option value="Vespertino">Vespertino</option>
+                <option value="Mixto">Mixto</option>
+            </select>
+
+            <h3>Localidad</h3>
+            <input class="cajita" type="text" name="bachillerato_localidad" placeholder="Localidad" required>
+
+            <h3>Entidad</h3>
+            <input class="cajita" type="text" name="bachillerato_entidad" placeholder="Estado / Entidad" required>
+
+            <h3>Especialidad</h3>
+            <input class="cajita" type="text" name="bachillerato_especialidad" placeholder="Especialidad cursada" required>
+
+            <h3>Promedio</h3>
+            <input class="cajita" type="number" step="0.01" name="bachillerato_promedio" placeholder="Promedio general" required>
+
+            <h3>2. Puntaje Examen CENEVAL</h3>
+            <input class="cajita" type="number" name="puntaje_ceneval" placeholder="Puntaje obtenido" required>
+
+            <h3>3. ¿Por qué elegiste estudiar en una Universidad Tecnológica?</h3>
+            <textarea class="cajita" name="razon_ut" placeholder="Motivo de elección..." required></textarea>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">4. ¿Esta Universidad era tu primera opción?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="ut_primera_opcion" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="ut_primera_opcion" value="NO" required> No</label>
+            </div>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">5. ¿Esta carrera era tu primera opción?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="carrera_primera_opcion" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="carrera_primera_opcion" value="NO" required> No</label>
+            </div>
+
+            <h3>6. ¿Qué esperas de esta carrera?</h3>
+            <textarea class="cajita" name="expectativas_carrera" placeholder="Tus expectativas..." required></textarea>
+
+            <h3>7. ¿Tienes planeado presentar examen de admisión para otra escuela?</h3>
+            <input class="cajita" type="text" name="examen_otra_escuela" placeholder="Especifica si tienes planes o coloca NO" required>
+
+            <h3>8. ¿Qué materias se te dificultan más?</h3>
+            <input class="cajita" type="text" name="materias_dificiles" placeholder="Materias complejas para ti" required>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">9. ¿Has reprobado alguna materia o presentado extraordinario?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="reprobado_extra" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="reprobado_extra" value="NO" required> No</label>
+            </div>
+
+            <h3>¿Qué materia(s)?</h3>
+            <input class="cajita" type="text" name="materias_reprobadas" placeholder="Nombre de las materias (o NA)" required>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">10. ¿Utilizas alguna manera o técnica de estudio?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="tecnica_estudio" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="tecnica_estudio" value="NO" required> No</label>
+            </div>
+
+            <h3>¿Cuál técnica?</h3>
+            <input class="cajita" type="text" name="cual_tecnica_estudio" placeholder="Especifica la técnica de estudio (o NA)" required>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">11. ¿Cuentas en tu casa con algunos libros que apoyan tus estudios?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="libros_casa" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="libros_casa" value="NO" required> No</label>
+            </div>
+
+            <h3>¿Cuántos aprox.?</h3>
+            <input class="cajita" type="number" name="cantidad_libros" placeholder="Cantidad aproximada de libros" required>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">12. ¿Tienes computadora en tu casa como apoyo para tus tareas escolares?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="computadora_casa" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="computadora_casa" value="NO" required> No</label>
+            </div>
+
+            <!-- EVALUACIÓN Y OBSERVACIONES DEL TUTOR -->
+            <h1>EVALUACIÓN Y OBSERVACIONES DEL TUTOR</h1>
+
+            <div class="encuesta-contenedor">
+                <div class="titulo-pregunta">¿Se considera al alumno como elemento de uno o más grupos altamente vulnerables?</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="vulnerable_grupo" value="SI" required> Sí</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="radio" name="vulnerable_grupo" value="NO" required> No</label>
+            </div>
+
+            <div class="encuesta-contenedor" id="grupo-vulnerabilidad">
+                <div class="titulo-pregunta">Marque los grupos de vulnerabilidad (SELECCIONA AL MENOS UNO):</div>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Aspectos Socioeconómicos"> Aspectos Socioeconómicos</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Aspectos Personales"> Aspectos Personales</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Aspectos Académicos"> Aspectos Académicos</label>
+                <label class="opcion-fila"><input class="circulo-radio" type="checkbox" name="vulnerabilidad_tipo[]" value="Ninguno"> Ninguno</label>
+            </div>
+
+            <h3>Observaciones del Tutor</h3>
+            <textarea class="cajita" name="observaciones_tutor" placeholder="Comentarios y observaciones generales del tutor..." required></textarea>
+
+            <!-- RECAPTCHA & UBICACIÓN -->
+            <div class="g-recaptcha" data-sitekey="TU_SITE_KEY"></div>
+
+
+            <!-- NOTIFICACIÓN -->
+            <div id="mensaje-notificacion" class="mensaje-notificacion"></div>
+
+            <!-- BOTONES -->
+            <div class="grupo-botones">
+                <button type="reset" class="btn btn-secundario">Limpiar</button>
+                <button type="submit" class="btn btn-primario">Enviar Formulario</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Módulo de Firebase versión 10 -->
+    <script type="module">
+        // 1. Importar las funciones de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // 2. CONFIGURACIÓN DE TU FIREBASE (Sustituye con tus propios datos)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAn2WnI6JLpJybhjrsL8UjAeJEBKvTmqSY",
+            authDomain: "colors-aece6.firebaseapp.com",
+            projectId: "colors-aece6",
+            storageBucket: "colors-aece6.firebasestorage.app",
+            messagingSenderId: "1061366068695",
+            appId: "1:1061366068695:web:08d67588264c2eb5a88792",
+            measurementId: "G-0XDNWB3QF4"
+        };
+
+        // 3. Inicializar Firebase y Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Variables de la interfaz
+        const pantallaLogin = document.getElementById("pantalla-login");
+        const formulario = document.getElementById("formulario-contacto");
+        const btnIngresar = document.getElementById("btn-ingresar");
+        const mensajeNotificacion = document.getElementById("mensaje-notificacion");
+        const errorLogin = document.getElementById("error-login");
+
+        // Acción al hacer clic en Acceder
+        btnIngresar.addEventListener("click", function () {
+            const nombreLogin = document.getElementById("login_nombre").value.trim();
+            const matriculaLogin = document.getElementById("login_matricula").value.trim();
+
+            if (!nombreLogin || !matriculaLogin) {
+                errorLogin.style.display = "block";
+                return;
+            }
+
+            errorLogin.style.display = "none";
+            document.getElementById("form_nombre").value = nombreLogin;
+            document.getElementById("form_matricula").value = matriculaLogin;
+
+            pantallaLogin.classList.add("oculto");
+            formulario.classList.remove("oculto");
+        });
+
+        function mostrarMensaje(texto, esExito) {
+            mensajeNotificacion.textContent = texto;
+            mensajeNotificacion.className = "mensaje-notificacion " + (esExito ? "mensaje-exito" : "mensaje-error");
+            mensajeNotificacion.style.display = "block";
+            mensajeNotificacion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Envío y Guardado a Firebase
+        formulario.addEventListener("submit", async function (evento) {
+            evento.preventDefault();
+            mensajeNotificacion.style.display = "none";
+
+            // Validar campos requeridos estándar de HTML5
+            if (!formulario.checkValidity()) {
+                formulario.reportValidity(); // Muestra la alerta nativa del navegador
+                return;
+            }
+
+            // Validar manualmente que los checkboxes tengan al menos una opción seleccionada
+            const aspectosSeleccionados = document.querySelectorAll('input[name="aspectos_observados[]"]:checked');
+            const vulnerabilidadSeleccionada = document.querySelectorAll('input[name="vulnerabilidad_tipo[]"]:checked');
+
+            if (aspectosSeleccionados.length === 0) {
+                mostrarMensaje("Por favor, selecciona al menos un Aspecto Observado en la sección II, pregunta 3.", false);
+                return;
+            }
+            if (vulnerabilidadSeleccionada.length === 0) {
+                mostrarMensaje("Por favor, selecciona al menos un grupo de vulnerabilidad al final del formulario.", false);
+                return;
+            }
+
+            // Recopilar los datos del formulario
+            const formData = new FormData(formulario);
+            const datosGuardar = Object.fromEntries(formData.entries());
+
+            // FormData solo captura el último valor para arrays (checkboxes), así que los extraemos manualmente
+            datosGuardar.aspectos_observados = Array.from(aspectosSeleccionados).map(cb => cb.value);
+            datosGuardar.vulnerabilidad_tipo = Array.from(vulnerabilidadSeleccionada).map(cb => cb.value);
+
+            // Agregar la fecha de envío
+            datosGuardar.fecha_registro = new Date().toISOString();
+
+            try {
+                // Guardar en la colección "formularios" de Firestore
+                const docRef = await addDoc(collection(db, "formularios"), datosGuardar);
+                mostrarMensaje("¡Formulario enviado y guardado correctamente!", true);
+                
+                // Limpiar formulario y reCAPTCHA
+                formulario.reset();
+                if (typeof grecaptcha !== 'undefined') {
+                    grecaptcha.reset();
+                }
+                
+                // Opcional: Regresar al login después de 3 segundos
+                setTimeout(() => {
+                    formulario.classList.add("oculto");
+                    pantallaLogin.classList.remove("oculto");
+                    mensajeNotificacion.style.display = "none";
+                }, 3000);
+
+            } catch (error) {
+                console.error("Error al guardar en Firebase: ", error);
+                mostrarMensaje("Hubo un error al guardar los datos. Revisa tu conexión.", false);
+            }
+        });
+    </script>
+</body>
+</html>
